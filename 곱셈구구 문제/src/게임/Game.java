@@ -1,20 +1,16 @@
 package 게임;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
 import dto.NumDto;
 import dto.OpDto;
+import dto.QuestionDto;
 
 public class Game {
 
-//	private int questionN;
-//	private int num1;
-//	private int num2;
-//	private int userResult;
-//	private int comResult;
-//	private String op;
-	private int i=0;
+	private int n;//사용자가 입력할 문제 개수
 	
 	NumDto nDto = new NumDto();
 	OpDto oDto = new OpDto();
@@ -23,37 +19,50 @@ public class Game {
 		System.out.println("구구단 게임입니다.");
 		Scanner sc = new Scanner(System.in);
 		System.out.println("풀고 싶은 문제 개수를 입력하십시오: ");
-		nDto.setQuestionN(sc.nextInt());
+		n = sc.nextInt();
+	}
+	//문제 생성
+	public ArrayList<QuestionDto> questionG(){
+		Random rnd = new Random();
+		ArrayList<QuestionDto> gList = new ArrayList<QuestionDto>();
+		for(int i=0; i<n; i++) {
+			QuestionDto dto = new QuestionDto();
+			dto.setNum1(rnd.nextInt(9)+1);
+			dto.setNum2(rnd.nextInt(9)+1);
+			dto.setResult(dto.getNum1()*dto.getNum2());
+			gList.add(dto);
+		} return gList;
+		
 	}
 	
-	//입력한 문제 개수만큼 문제 생성
-	public boolean questionG() {
-		for(i=0; i < nDto.getQuestionN(); i++) {
+	
+	//문제 출력
+	public void qPrint(NumDto dto) {
+		Random rd = new Random();
+		nDto.setNum1(rd.nextInt(9)+1);
+		nDto.setNum2(rd.nextInt(9)+1);
+		nDto.setComResult(nDto.getNum1()*nDto.getNum2());//정답세팅
+	}
+	//유저 정답 입력
+	public int userResult() {
+		Scanner sc = new Scanner(System.in);
+		return sc.nextInt();
+	}
+	
+	//답 검증
+	public boolean check(int user, int com) {
+		if(user==com) {
 			return true;
 		} return false;
 	}
-
-	public void question(NumDto nDto) {
-		Random rd = new Random();
-		nDto.setNum1(rd.nextInt(9)+1);
-		nDto.setNum2(rd.nextInt(9)+1);//1~9까지 정수 생성
-	}
-	//문제 출력
-	public void qPrint() {
-		System.out.print(nDto.getNum1()+"*"+nDto.getNum2()+"=");
-	}
-	//유저 정답 입력
-	public void userResult() {
-		Scanner sc = new Scanner(System.in);
-		nDto.setUserResult(sc.nextInt());
-	}
-	//컴퓨터 정답
-	public void comResult() {
-		nDto.setComResult(nDto.getNum1()*nDto.getNum2());
-	}
+	
 	//결과 출력
 	public void printResult() {
-		if(nDto.getUserResult()==nDto.getComResult()) {
+		NumDto nDto = new NumDto();
+		qPrint(nDto);
+		System.out.print(nDto.getNum1()+"*"+nDto.getNum2()+"=");
+			int user = userResult();
+		if(check(user, nDto.getComResult())) {
 			System.out.println("정답");
 		}else {
 			System.out.println("오답");
